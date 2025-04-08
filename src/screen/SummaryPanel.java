@@ -2,12 +2,10 @@ package src.screen;
 
 import src.model.Transaction;
 import src.model.User;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class SummaryPanel extends JPanel {
-
     private JLabel balanceLabel;
     private JLabel incomeLabel;
     private JLabel expenseLabel;
@@ -15,7 +13,6 @@ public class SummaryPanel extends JPanel {
 
     public SummaryPanel(User user) {
         this.user = user;
-
         setLayout(new GridLayout(3, 1, 10, 10));
 
         balanceLabel = new JLabel();

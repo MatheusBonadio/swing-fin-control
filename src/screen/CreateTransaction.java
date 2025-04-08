@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class CreateTransaction extends JPanel {
-
     private JComboBox<String> typeComboBox;
     private JComboBox<String> categoryComboBox;
     private JTextField amountField;
@@ -34,9 +33,11 @@ public class CreateTransaction extends JPanel {
 
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
 
-        typeComboBox = new JComboBox<>(new String[]{"Receita", "Despesa"});
+        typeComboBox = new JComboBox<>(new String[] {"Receita", "Despesa"});
         categoryComboBox = new JComboBox<>();
         updateCategories();
+
+        typeComboBox.addActionListener(e -> updateCategories());
 
         amountField = new JTextField();
         dateField = new JTextField(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
@@ -65,8 +66,17 @@ public class CreateTransaction extends JPanel {
 
     private void updateCategories() {
         categoryComboBox.removeAllItems();
-        for (var category : user.getCategories()) {
-            categoryComboBox.addItem(category.getName());
+        String type = (String) typeComboBox.getSelectedItem();
+        if ("Despesa".equals(type)) {
+            String[] expenseCategories = {"Casa", "Cartão de Crédito", "Alimentação", "Transporte", "Educação", "Saúde", "Lazer"};
+            for (String cat : expenseCategories) {
+                categoryComboBox.addItem(cat);
+            }
+        } else if ("Receita".equals(type)) {
+            String[] incomeCategories = {"Salário", "Freelance", "Investimentos"};
+            for (String cat : incomeCategories) {
+                categoryComboBox.addItem(cat);
+            }
         }
     }
 
