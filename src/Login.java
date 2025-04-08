@@ -1,8 +1,10 @@
-package src.screen;
+package src;
 
-import src.RegistrationFrame;
 import src.model.UserManager;
 import src.model.User;
+import src.screen.MainScreen;
+import src.screen.RegistrationFrame;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package src;
+package src.screen;
 
 import src.model.UserManager;
 import javax.swing.*;

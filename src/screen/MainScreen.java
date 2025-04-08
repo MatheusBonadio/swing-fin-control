@@ -1,6 +1,7 @@
 package src.screen;
 
 import src.model.User;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +10,7 @@ public class MainScreen extends JFrame {
     public MainScreen(User user) {
         setTitle("Sistema de Gestão Financeira Pessoal");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);  // Tamanho ampliado para acomodar melhor os componentes
+        setSize(800, 600);
         setLocationRelativeTo(null);
 
         JMenuBar menuBar = new JMenuBar();
