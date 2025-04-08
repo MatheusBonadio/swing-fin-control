@@ -22,7 +22,7 @@ public class Main {
                 "Salário",
                 LocalDate.of(2025, 4, 1),
                 "Salário mensal",
-                TransactionType.RECEITA
+                TransactionType.INCOME
         ));
 
         user.addTransaction(new Transaction(
@@ -30,7 +30,7 @@ public class Main {
                 "Alimentação",
                 LocalDate.of(2025, 4, 2),
                 "Mercado",
-                TransactionType.DESPESA
+                TransactionType.EXPENSE
         ));
 
         user.addTransaction(new Transaction(
@@ -38,7 +38,7 @@ public class Main {
                 "Transporte",
                 LocalDate.of(2025, 4, 3),
                 "Ônibus",
-                TransactionType.DESPESA
+                TransactionType.EXPENSE
         ));
 
         user.addTransaction(new Transaction(
@@ -46,7 +46,7 @@ public class Main {
                 "Freelancer",
                 LocalDate.of(2025, 4, 5),
                 "Projeto de design",
-                TransactionType.RECEITA
+                TransactionType.INCOME
         ));
 
         System.out.println("=== Histórico de Transações ===");
@@ -54,24 +54,14 @@ public class Main {
             System.out.println(t.date + " | " + t.type + " | R$" + t.value + " | " + t.category + " | " + t.description);
         }
 
-        double totalReceitas = calcularTotalPorTipo(user.transactions, TransactionType.RECEITA);
-        double totalDespesas = calcularTotalPorTipo(user.transactions, TransactionType.DESPESA);
+        double totalReceitas = Transaction.calculateTotalByType(user.transactions, TransactionType.INCOME);
+        double totalDespesas = Transaction.calculateTotalByType(user.transactions, TransactionType.EXPENSE);
         double saldo = totalReceitas - totalDespesas;
 
         System.out.println("\n=== Resumo Financeiro ===");
         System.out.printf("Total de Receitas: R$ %.2f%n", totalReceitas);
         System.out.printf("Total de Despesas: R$ %.2f%n", totalDespesas);
         System.out.printf("Saldo Atual: R$ %.2f%n", saldo);
-    }
-
-    public static double calcularTotalPorTipo(List<Transaction> transacoes, TransactionType tipo) {
-        double total = 0;
-        for (Transaction t : transacoes) {
-            if (t.type == tipo) {
-                total += t.value;
-            }
-        }
-        return total;
     }
 }
 

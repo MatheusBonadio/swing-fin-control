@@ -1,5 +1,6 @@
 package src.model;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Transaction {
     public double value;
@@ -54,5 +55,15 @@ public class Transaction {
 
     public void setType(TransactionType type) {
         this.type = type;
+    }
+
+    public static double calculateTotalByType(List<Transaction> transactions, TransactionType type) {
+        double total = 0;
+        for (Transaction t : transactions) {
+            if (t.type == type) {
+                total += t.value;
+            }
+        }
+        return total;
     }
 }
