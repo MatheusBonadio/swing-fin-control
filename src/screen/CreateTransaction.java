@@ -2,7 +2,6 @@ package src.screen;
 
 import src.model.Transaction;
 import src.model.User;
-
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -11,19 +10,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class CreateTransaction extends JPanel {
+    private TransactionHistoryPanel historyPanel;
+    private User user;
     private JComboBox<String> typeComboBox;
     private JComboBox<String> categoryComboBox;
     private JTextField amountField;
     private JTextField dateField;
     private JTextField descriptionField;
     private JButton saveButton;
-    private SummaryPanel summaryPanel;
-    private User user;
 
-    public CreateTransaction(SummaryPanel summaryPanel, User user) {
-        this.summaryPanel = summaryPanel;
+    public CreateTransaction(TransactionHistoryPanel historyPanel, User user) {
+        this.historyPanel = historyPanel;
         this.user = user;
-
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -33,10 +31,9 @@ public class CreateTransaction extends JPanel {
 
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
 
-        typeComboBox = new JComboBox<>(new String[] {"Receita", "Despesa"});
+        typeComboBox = new JComboBox<>(new String[]{"Receita", "Despesa"});
         categoryComboBox = new JComboBox<>();
         updateCategories();
-
         typeComboBox.addActionListener(e -> updateCategories());
 
         amountField = new JTextField();
@@ -66,16 +63,10 @@ public class CreateTransaction extends JPanel {
 
     private void updateCategories() {
         categoryComboBox.removeAllItems();
-        String type = (String) typeComboBox.getSelectedItem();
-        if ("Despesa".equals(type)) {
-            String[] expenseCategories = {"Casa", "Cartão de Crédito", "Alimentação", "Transporte", "Educação", "Saúde", "Lazer"};
-            for (String cat : expenseCategories) {
-                categoryComboBox.addItem(cat);
-            }
-        } else if ("Receita".equals(type)) {
-            String[] incomeCategories = {"Salário", "Freelance", "Investimentos"};
-            for (String cat : incomeCategories) {
-                categoryComboBox.addItem(cat);
+        String selectedType = (String) typeComboBox.getSelectedItem();
+        for (var category : user.getCategories()) {
+            if (category.getType().equalsIgnoreCase(selectedType)) {
+                categoryComboBox.addItem(category.getName());
             }
         }
     }
@@ -85,18 +76,14 @@ public class CreateTransaction extends JPanel {
         String category = (String) categoryComboBox.getSelectedItem();
         String dateText = dateField.getText().trim();
         String description = descriptionField.getText().trim();
-
         try {
             double amount = Transaction.parseAmount(amountField.getText().trim());
             LocalDate date = LocalDate.parse(dateText, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             Transaction.Type type = typeText.equals("Receita") ? Transaction.Type.INCOME : Transaction.Type.EXPENSE;
-
             Transaction newTransaction = new Transaction(amount, category, date, description, type);
             user.addTransaction(newTransaction);
-            summaryPanel.updateSummary();
-
             JOptionPane.showMessageDialog(this, "Transação salva com sucesso!");
-
+            historyPanel.applyFilters();
             amountField.setText("");
             descriptionField.setText("");
         } catch (Exception ex) {
