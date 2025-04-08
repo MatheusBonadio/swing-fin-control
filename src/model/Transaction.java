@@ -1,9 +1,8 @@
 package src.model;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 public class Transaction {
     public enum Type {
@@ -71,17 +70,26 @@ public class Transaction {
     }
 
     private void validate() {
-        if (category == null || category.isEmpty())
-            throw new IllegalArgumentException("A categoria não pode ser vazia.");
+        if (amount < 0) {
+            throw new IllegalArgumentException("O valor da transação não pode ser negativo");
+        }
 
-        if (date == null)
-            throw new IllegalArgumentException("A data não pode ser nula.");
+        Objects.requireNonNull(category, "Categoria não pode ser nula");
+        Objects.requireNonNull(date, "Data não pode ser nula");
+        Objects.requireNonNull(description, "Descrição não pode ser nula");
+        Objects.requireNonNull(type, "Tipo da transação não pode ser nulo");
+
+        if (category.isBlank()) {
+            throw new IllegalArgumentException("Categoria não pode estar em branco");
+        }
+
+        if (description.isBlank()) {
+            throw new IllegalArgumentException("Descrição não pode estar em branco");
+        }
 
         if (date.isAfter(LocalDate.now()))
             throw new IllegalArgumentException("A data não pode ser futura.");
 
-        if (description == null || description.isEmpty())
-            throw new IllegalArgumentException("A descrição não pode ser vazia.");
     }
 
     public static double parseAmount(String amountText) {
@@ -100,20 +108,20 @@ public class Transaction {
         }
     }
 
-    public static double calculateTotal(@NotNull List<Transaction> transactions) {
+    public static double calculateTotal(List<Transaction> transactions) {
         return transactions.stream()
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
 
-    public static double calculateIncome(@NotNull List<Transaction> transactions) {
+    public static double calculateIncome(List<Transaction> transactions) {
         return transactions.stream()
                 .filter(transaction -> transaction.getType() == Type.INCOME)
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
 
-    public static double calculateExpense(@NotNull List<Transaction> transactions) {
+    public static double calculateExpense(List<Transaction> transactions) {
         return transactions.stream()
                 .filter(transaction -> transaction.getType() == Type.EXPENSE)
                 .mapToDouble(Transaction::getAmount)

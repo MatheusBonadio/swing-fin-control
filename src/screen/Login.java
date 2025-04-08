@@ -1,35 +1,66 @@
 package src.screen;
 
+import src.RegistrationFrame;
+import src.model.UserManager;
+import src.model.User;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Login {
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Login");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(350, 180);
-        frame.setLocationRelativeTo(null);
+public class Login extends JFrame {
+    public Login() {
+        setTitle("Login");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(300, 200);
+        setLayout(new GridLayout(4, 2));
 
-        frame.setLayout(new BorderLayout());
-
-        JPanel formPanel = new JPanel(new GridLayout(2, 2, 5, 5));
         JLabel usuarioLabel = new JLabel("Usuário:");
-        JTextField usuarioCampo = new JTextField(20);
+        JTextField usuarioCampo = new JTextField();
         JLabel senhaLabel = new JLabel("Senha:");
-        JPasswordField senhaCampo = new JPasswordField(15);
-
-        formPanel.add(usuarioLabel);
-        formPanel.add(usuarioCampo);
-        formPanel.add(senhaLabel);
-        formPanel.add(senhaCampo);
-
-        frame.add(formPanel, BorderLayout.CENTER);
+        JPasswordField senhaCampo = new JPasswordField();
 
         JButton loginBotao = new JButton("Login");
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(loginBotao);
-        frame.add(buttonPanel, BorderLayout.SOUTH);
+        JButton registrarBotao = new JButton("Registrar");
 
-        frame.setVisible(true);
+        add(usuarioLabel);
+        add(usuarioCampo);
+        add(senhaLabel);
+        add(senhaCampo);
+        add(new JLabel());
+        add(loginBotao);
+        add(new JLabel());
+        add(registrarBotao);
+
+        loginBotao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usuarioCampo.getText();
+                String password = new String(senhaCampo.getPassword());
+                if (UserManager.authenticateUser(username, password)) {
+                    JOptionPane.showMessageDialog(null, "Login realizado com sucesso!");
+                    User user = UserManager.getUser(username);
+                    new MainScreen(user);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos!");
+                }
+            }
+        });
+
+        registrarBotao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new RegistrationFrame();
+            }
+        });
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        UserManager.registerUser("admin", "admin");
+        new Login();
     }
 }
